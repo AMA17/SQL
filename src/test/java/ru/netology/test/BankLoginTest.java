@@ -3,14 +3,14 @@ package ru.netology.test;
 import org.junit.jupiter.api.*;
 import ru.netology.data.DataHelper;
 import ru.netology.data.SQLHelper;
-import ru.netology.page.DashboardPage;
+import ru.netology.page.LoginPage;
 
 import static com.codeborne.selenide.Selenide.open;
 import static ru.netology.data.SQLHelper.cleanAuthCodes;
 import static ru.netology.data.SQLHelper.cleanDatabase;
 
 public class BankLoginTest {
-    DashboardPage.LoginPage loginPage;
+    LoginPage loginPage;
 
     @AfterEach
     void tearDown() {
@@ -24,12 +24,12 @@ public class BankLoginTest {
 
     @BeforeEach
     void setUp() {
-        loginPage = open("http://localhost:9999", DashboardPage.LoginPage.class);
+        loginPage = open("http://localhost:9999", LoginPage.class);
     }
 
     @Test
-    @DisplayName("Successful login from test data")
-    void successfulTestData() {
+    @DisplayName("Successful login with login and password from test data")
+    void successfulLoginWithLoginAndPasswordFromTestData() {
         var authInfo = DataHelper.getAuthInfoWithTestData();
         var verificationPage = loginPage.validLogin(authInfo);
         verificationPage.verificationPageVisiblity();
@@ -39,15 +39,15 @@ public class BankLoginTest {
 
     @Test
     @DisplayName("Error notification if the user does not exist in the database")
-    void errorDatabase() {
+    void errorNotificationIfTheUserDoesNotExistInTheDatabase() {
         var authInfo = DataHelper.generateRandomUser();
         loginPage.validLogin(authInfo);
         loginPage.verifyErrorNotification("Ошибка! \nНеверно указан логин или пароль");
     }
 
     @Test
-    @DisplayName("Error notification if a login with an existing and active user in the database")
-    void loggingInWithAnExistingActiveUserInTheDatabase() {
+    @DisplayName("Error notification if a login with an existing and active user in the database and a random verification code")
+    void errorNotificationIfALoginWithAnExistingAndActiveUserInTheDatabaseAndARandomVerificationCode() {
         var authInfo = DataHelper.getAuthInfoWithTestData();
         var verificationPage = loginPage.validLogin(authInfo);
         verificationPage.verificationPageVisiblity();
@@ -56,4 +56,3 @@ public class BankLoginTest {
         verificationPage.verifyErrorNotification("Ошибка! \nНеверно указан код! Попробуйте ещё раз.");
     }
 }
-
